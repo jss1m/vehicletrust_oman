@@ -1,5 +1,7 @@
 # VehicleTrust Oman
 
+[Security Tests](docs/SECURITY_TEST_MATRIX.md) | [Architecture](docs/ARCHITECTURE.md) | [Hadatha Evidence](docs/hadatha/HADATHA_ALIGNMENT.md) | [Threat Model](docs/THREAT_MODEL.md)
+
 ## Cryptographic Plate-to-Vehicle Identity Assurance
 
 VehicleTrust Oman is a local research and hackathon prototype that demonstrates a narrow security
@@ -12,13 +14,41 @@ with its own independent P-256 key.
 All vehicle records, VINs, plates, keys and authority data are synthetic. The interface does not use
 official logos, and every plate is visibly marked `PROTOTYPE / DEMO`.
 
-## Problem
+## The Problem
+
+> A license plate can be completely genuine and still be attached to the wrong vehicle.
+
+## The Innovation
+
+> VehicleTrust separates physical plate identity from vehicle identity and verifies their current
+> relationship using a signed plate credential, registry binding and fresh cryptographic vehicle proof.
+
+## What the MVP Demonstrates
+
+- Genuine plate on correct vehicle → `VERIFIED`
+- Genuine plate transferred to another vehicle → `DETECTED`
+- Credential clone → `DETECTED`
+- Tampered credential → `REJECTED`
+- Replay attack → `REJECTED`
+- Authorized rebinding → `VERIFIED`
+- Reported stolen vehicle → `ALERTED`
+
+## Evidence
+
+- Automated baseline: **62 collected, 62 passed, 0 failed, 0 skipped** on 19 August 2026.
+- [Security Test Matrix](docs/SECURITY_TEST_MATRIX.md)
+- [23 Hadatha screenshots](docs/hadatha/screenshots/)
+- [Hadatha submission evidence](docs/hadatha/HADATHA_ALIGNMENT.md)
+
+![Genuine plate detected on the wrong vehicle](docs/hadatha/screenshots/06_genuine_plate_wrong_vehicle.png)
+
+## Security Model
 
 A genuine physical plate may be moved to another visually similar vehicle. A signed code proves that
 the credential came from its issuer and was not altered; it does not, by itself, prove that the
 credential is still attached to the vehicle for which it was issued.
 
-## Solution
+## Verification Flow
 
 The reader verifies two independent claims:
 
@@ -123,6 +153,9 @@ The secure code does not change for an ordinary authorized vehicle reassociation
 
 ## Tests
 
+The current repository baseline was executed before the final cleanup: **62 collected, 62 passed,
+0 failed, 0 skipped**.
+
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -v
 .\.venv\Scripts\python.exe -m pytest --maxfail=1
@@ -167,7 +200,16 @@ Run **Authorized Rebinding**. Plate UID and signed code remain unchanged, the ol
 
 ## Deployment-ready configuration
 
-Production entry: `gunicorn wsgi:app`. Health probes: `/healthz` and `/readyz`. `render.yaml` provisions a persistent SQLite demo disk; a managed SQL database is recommended for multi-instance research. Configure variables from `.env.example`; never commit `.env`, database files, or PEM keys. No public deployment was created by this build.
+Deployment entry: `gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 60 wsgi:app`.
+Health probes: `/healthz` and `/readyz`. The MVP defaults to ephemeral SQLite storage and does not
+require a paid persistent disk. A durable deployment should configure a managed database or an
+explicit persistence plan. Configure variables from `.env.example`; never commit `.env`, database
+files, or PEM keys.
+
+Gunicorn is the Linux/Render deployment server. On Windows, use `run.py` for local demonstration;
+the GitHub Actions workflow smoke-tests the Gunicorn command and required routes on Ubuntu.
+
+**Deployment-ready; no public live deployment required for the current submission.**
 
 ### 3:30–4:00 — Architecture and future hardware
 
