@@ -1,0 +1,12 @@
+.venv/
+.release_venv/
+instance/
+vehicletrust/static/generated_qr/
+.env
+*.db
+*.pem
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+test-results/

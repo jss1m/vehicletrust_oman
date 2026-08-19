@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block title %}Vehicle Identity Assurance Console{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">OPERATIONS OVERVIEW</div><h1>Vehicle Identity Assurance Console</h1><p>Live posture of the simulated vehicle registry.</p></div><a class="btn btn-primary" href="{{ url_for('main.verify') }}">Verify Vehicle</a></div>
+<section class="stat-grid">
+{% for label, value, tone in [('Registered Vehicles',stats.vehicles,'blue'),('Active Credentials',stats.credentials,'green'),('Verification Attempts',stats.attempts,'slate'),('Verified Vehicles',stats.verified,'green'),('Security Alerts',stats.alerts,'red'),('Replay Attempts',stats.replays,'amber'),('Revoked Credentials',stats.revoked,'gray')] %}
+<article class="stat-card tone-{{ tone }}"><span>{{ label }}</span><strong>{{ value }}</strong><small>Simulated registry</small></article>{% endfor %}
+</section>
+<section class="panel"><div class="panel-head"><div><h2>Latest Security Events</h2><p>Append-only identity assurance evidence</p></div><a href="{{ url_for('main.audit_trail') }}">View full trail →</a></div>
+<div class="table-wrap"><table><thead><tr><th>Time</th><th>Event</th><th>Plate</th><th>Result</th><th>Risk</th></tr></thead><tbody>{% for e in events %}<tr><td>{{ e.timestamp.strftime('%H:%M:%S') }}</td><td>{{ e.event_type|replace('_',' ') }}</td><td>{{ e.plate or '—' }}</td><td><span class="badge status-{{ 'ok' if e.result == 'VERIFIED' else 'bad' if e.risk_level == 'CRITICAL' else 'warn' }}">{{ e.result|replace('_',' ') }}</span></td><td>{{ e.risk_level }}</td></tr>{% else %}<tr><td colspan="5">No verification events yet. Launch a verification to begin.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}
+

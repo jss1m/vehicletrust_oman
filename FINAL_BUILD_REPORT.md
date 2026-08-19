@@ -1,0 +1,140 @@
+# FINAL BUILD REPORT
+
+## Status
+
+**Validated Hackathon MVP — READY for local demonstration and deployment handoff.** This is not a production, certified, government-connected, or field-validated system.
+
+## Application
+
+- Startup: PASS (`/healthz`, `/readyz`, and `/registry` returned HTTP 200).
+- Empty database initialization and synthetic seed: PASS.
+- Restart and persistence: PASS; a second process reopened the same database and returned `VERIFIED` for the persisted active binding.
+
+## Fresh Build
+
+PASS. A new Python 3.12 virtual environment installed `requirements-dev.txt` from zero and ran the final complete suite: 62 passed in 197.34s.
+
+## Credential Code
+
+- Format: compact standard QR; canonical CBOR in COSE_Sign1 semantics; ES256/P-256; issuer key ID `VTO1`.
+- Payload fields: version, 8-byte credential reference, 6-byte immutable Plate UID reference.
+- Encoded visual value: 101 bytes raw COSE.
+- Text/API transport: `VT1:` Base45, under 200 bytes.
+- Rendered size: QR version 5, ECC-L, mask 4, four-module quiet zone, 112×112 CSS pixels in a 140px plate body (80-signature comparison plus fresh-suite samples).
+- Decode test: PASS from the generated PNG through OpenCV.
+- Signature round trip: PASS.
+- Corrupted image/protected data: controlled rejection PASS.
+- Data Matrix decision: rejected because its available generation/decoding path added fragile deployment dependencies.
+
+## Tests
+
+- Collected: 62
+- Passed: 62
+- Failed: 0
+- Skipped: 0
+- `pytest -v`: 62 passed in 116.93s.
+- `pytest --maxfail=1`: 62 passed in 134.00s.
+- Clean-environment `pytest -q`: 62 passed in 197.34s.
+- Ruff check: PASS.
+- Ruff format check: PASS (50 files).
+- Bandit: PASS, 0 findings after narrowly justified fixed-input/validated-URL suppressions.
+- Repository readiness/secret/evidence check: PASS.
+- `pip-audit`: installed and attempted twice; the external vulnerability service timed out without a result, so this check is **NOT COMPLETED**, not reported as PASS. CI is configured to retry it in a networked runner.
+
+## Security
+
+| Scenario | Required / actual | Result |
+|---|---|---|
+| Normal Authentication | VERIFIED | PASS |
+| Plate Swap | GENUINE_PLATE_WRONG_VEHICLE | PASS |
+| Credential Clone | VEHICLE_IDENTITY_MISMATCH | PASS |
+| Tampering | INVALID_DIGITAL_SIGNATURE | PASS |
+| Vehicle Impersonation | INVALID_VEHICLE_PROOF | PASS |
+| Replay | REPLAY_DETECTED | PASS |
+| Expiry | EXPIRED_CHALLENGE | PASS |
+| Revocation | CREDENTIAL_REVOKED | PASS |
+| Authorized Rebinding | VERIFIED | PASS |
+| Secure Module Failure | SECURE_MODULE_UNAVAILABLE | PASS |
+| Stolen Vehicle Status | VERIFIED_IDENTITY_STOLEN_VEHICLE | PASS |
+
+The combined 21-scenario deterministic Security/Lifecycle demo passed and completed in 7.38s in a measured CLI run.
+
+## Identity Lifecycle
+
+| Capability | Actual | Result |
+|---|---|---|
+| Static Plate UID / code across ordinary rebind | REBIND_SUCCESS_STATIC_CODE | PASS |
+| Ownership transfer with binding unchanged | OWNERSHIP_CHANGED_BINDING_REMAINS | PASS |
+| Sell vehicle and keep plate | RESERVED_PLATE | PASS |
+| Reserved plate illegal use | not VERIFIED | PASS |
+| Plate-number sale | old Plate UID retired, new issued and verified | PASS |
+| Lost plate | old code LOST_PLATE, replacement verified | PASS |
+| Damaged replacement | old REVOKED_PLATE, replacement verified | PASS |
+| Multiple vehicles per owner | independent active bindings | PASS |
+| Duplicate active binding | database constraint BLOCKED | PASS |
+| Concurrent rebinding | exactly one of two threads succeeded | PASS |
+| Transaction rollback | injected failure restored original binding | PASS |
+| Audit history | superseded/closed rows and structured transaction evidence preserved | PASS |
+
+## Database Migration Summary
+
+The fresh schema adds `Owner`, `PlateNumber`, `PhysicalPlate`, `PlateEntitlement`, `VehicleOwnership`, and append-only `PlateVehicleBinding`; adds `Vehicle.theft_status`; and enriches `AuditEvent` with actor, Plate UID, previous/new vehicle and owner, and transaction ID. SQLite partial unique indexes enforce one active binding per PhysicalPlate, one active entitlement per plate number, and one active ownership record per vehicle. This prototype rebuilds the demo database from zero; a production rollout still needs Alembic migrations and backup/rollback planning.
+
+## UI
+
+- Desktop 1440×900: PASS.
+- Desktop 1280×720: PASS.
+- Mobile 390×844: PASS.
+- Horizontal overflow: none on landing, dashboard, registry, detail/plate, verify, Security Lab, Lifecycle, Audit, and Architecture.
+- Arabic `عُمان` RTL rendering: PASS.
+- Browser console: no errors in the tested routes.
+- Real UI flows: normal verification, swap, replay, authorized rebinding, full security/lifecycle demo PASS.
+
+## Public Deployment
+
+**Deployment-ready but not deployed.**
+
+- URL: none supplied.
+- Homepage/health/routes/assets/HTTPS: NOT RUN against a public host.
+- Local startup/routes/assets: PASS.
+- Live checker correctly refused to claim success without `PUBLIC_DEMO_URL`.
+
+## GitHub
+
+- Repository structure: PASS.
+- Secrets check: PASS; no tracked `.env`, `.db`, `.pem`, or obvious embedded private key/secret values found by the readiness check.
+- README: updated and clean-install instructions executed.
+- CI: GitHub Actions runs pytest, Ruff, format, Bandit, pip-audit, and repository readiness.
+- Deployment files: `wsgi.py`, `Procfile`, `render.yaml`, `.env.example`, `/healthz`, `/readyz`, live checker.
+
+## Hadatha Evidence
+
+- Screenshots: 23 real running-application PNGs, PASS.
+- Security and lifecycle matrices: PASS.
+- Arabic form draft: PASS.
+- Feasibility and impact: PASS, with no fabricated figures.
+- Demo script: PASS.
+- Official-alignment document and supporting-evidence index: PASS.
+
+## Known Limitations
+
+- Simulated file-backed vehicle secure modules and demo issuer; no certified hardware/HSM.
+- Synthetic registry and plates; no vehicle, reader, ROP, government data, approval, or integration.
+- SQLite and in-process concurrency lock are not a distributed production design.
+- Demo Admin mode is not production authentication/RBAC.
+- No relay-resistance proof, CAN-theft prevention, towing/GPS-jamming control, or defense after genuine key/hardware compromise.
+- No field pilot, impact percentage, financial result, legal/governance approval, privacy assessment, hardware certification, or independent penetration test.
+- QR reliability required 112px, above the desired 60–72px target; earlier 88px and 100px estimates were rejected after randomized test failures.
+- External dependency vulnerability audit remained incomplete because the service timed out.
+
+## How to Run
+
+```powershell
+cd vehicletrust_oman
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m playwright install chromium
+.\.venv\Scripts\python.exe run.py
+```
+
+Open `http://127.0.0.1:5000`, then use **Security Lab → Run Full Security Demo** and **Lifecycle**.

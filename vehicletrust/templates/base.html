@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="VehicleTrust Oman cryptographic plate-to-vehicle identity assurance research prototype">
+  <title>{% block title %}VehicleTrust Oman{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='compact.css') }}">
+</head>
+<body>
+  <div class="prototype-notice">Research Prototype — Simulated Registry — No connection to Royal Oman Police systems.</div>
+  <nav class="topnav" aria-label="Primary navigation">
+    <a class="brand" href="{{ url_for('main.landing') }}"><span class="brand-mark">VT</span><span>VehicleTrust <b>Oman</b></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navlinks">Menu</button>
+    <div class="navlinks" id="navlinks">
+      <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('main.registry') }}">Registry</a>
+      <a href="{{ url_for('main.verify') }}">Verify</a>
+      <a href="{{ url_for('main.security_lab') }}">Security Lab</a>
+      <a href="{{ url_for('main.lifecycle') }}">Lifecycle</a>
+      <a href="{{ url_for('main.audit_trail') }}">Audit</a>
+      <a href="{{ url_for('main.architecture') }}">Architecture</a>
+    </div>
+  </nav>
+  <main class="container app-main">{% block content %}{% endblock %}</main>
+  <footer><span>VehicleTrust Oman Demo Authority</span><span>PROTOTYPE / DEMO · Synthetic data only</span></footer>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

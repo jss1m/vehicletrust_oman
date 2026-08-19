@@ -1,0 +1,18 @@
+[project]
+name = "vehicletrust-oman"
+version = "0.1.0"
+description = "Cryptographic plate-to-vehicle identity assurance research prototype"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers -p no:cacheprovider"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = ["instance"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+

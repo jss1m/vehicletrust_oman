@@ -1,0 +1,38 @@
+{% extends 'base.html' %}{% block title %}Security Lab — VehicleTrust Oman{% endblock %}
+{% block content %}
+<div class="lab-shell">
+  <div class="page-head">
+    <div><div class="eyebrow lab-eye">CONTROLLED ATTACK SIMULATION</div><h1>Security Lab</h1><p>Every run resets synthetic state and compares the real decision with the required outcome.</p></div>
+    <form method="post" action="{{ url_for('main.full_demo') }}"><button class="btn btn-lime" type="submit">Run Full Security Demo</button></form>
+  </div>
+  <div class="lab-grid">
+    <section class="scenario-grid">
+      {% for id, title, desc in [
+        ('normal','Normal Verification','Plate A + Vehicle A'),
+        ('clone','Clone Credential','Exact credential A + Vehicle B'),
+        ('swap','Swap Genuine Plate','Authentic Plate A + Vehicle B'),
+        ('tamper','Tamper Credential','Alter signed compact CBOR'),
+        ('impersonation','Vehicle Impersonation','Vehicle B claims Vehicle A identity'),
+        ('replay','Replay Response','Reuse a consumed proof'),
+        ('expiry','Expire Challenge','Submit proof after TTL'),
+        ('revocation','Revoke Credential','Valid signature, revoked status'),
+        ('rebinding','Authorized Rebinding','Transfer Plate A to Vehicle B'),
+        ('offline','Secure Module Offline','Required vehicle proof unavailable')
+        ,('stolen','Stolen Vehicle Status','Identity valid; registry alert active')
+      ] %}
+      <form method="post" class="scenario-card"><input type="hidden" name="scenario" value="{{ id }}"><span>{{ '%02d'|format(loop.index) }}</span><h3>{{ title }}</h3><p>{{ desc }}</p><button type="submit">Run scenario →</button></form>
+      {% endfor %}
+    </section>
+    <aside class="lab-result">
+      {% if result %}
+      <div class="lab-result-head {{ 'lab-pass' if result.passed else 'lab-fail' }}"><small>SCENARIO SELF-TEST</small><h2>{{ 'PASS' if result.passed else 'FAIL' }}</h2></div>
+      <dl><dt>ATTACK</dt><dd>{{ result.scenario|replace('_',' ')|title }}</dd><dt>EXPECTED</dt><dd>{{ result.expected|replace('_',' ') }}</dd><dt>ACTUAL</dt><dd>{{ result.actual|replace('_',' ') }}</dd><dt>CONTROL</dt><dd>{{ result.control }}</dd></dl>
+      <p>{{ result.details.reason }}</p>
+      <div class="mini-steps">{% for step in result.details.steps %}<span class="{{ 'pass' if step.status == 'PASS' else 'fail' }}">{{ '✓' if step.status == 'PASS' else '✕' }} {{ step.label }}</span>{% endfor %}</div>
+      {% else %}
+      <img src="{{ url_for('static', filename='img/genuine_plate_swap.svg') }}" alt="Genuine plate on wrong vehicle"><h2>Choose an attack</h2><p>The result is marked PASS only when the actual decision exactly matches the expected security outcome.</p>
+      {% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+/* Compact credential overrides kept separate from the original validated layout. */
+.plate-main {
+  grid-template-columns: 2fr .65fr .8fr 120px;
+  min-height: 140px;
+}
+
+.plate-main > div {
+  border-right: 2px solid rgba(0, 0, 0, .35);
+}
+
+.plate-qr-link {
+  align-self: center;
+  background: #fff;
+  border: 2px solid rgba(0, 0, 0, .45);
+  border-radius: 3px;
+  display: grid;
+  height: 116px;
+  justify-self: center;
+  place-items: center;
+  width: 116px;
+}
+
+.plate-qr {
+  background: #fff;
+  border-right: 0;
+  display: block;
+  height: 112px;
+  object-fit: contain;
+  padding: 2px;
+  width: 112px;
+}
+
+.plate-qr-link:focus {
+  outline: 3px solid #0875b8;
+  outline-offset: 2px;
+}
+
+.code-zoom {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.code-zoom img {
+  image-rendering: pixelated;
+  width: min(100%, 360px);
+}
+
+.code-zoom small {
+  color: var(--muted);
+}
+
+@media (max-width: 800px) {
+  .plate-main {
+    grid-template-columns: 1.6fr .65fr .75fr 120px;
+  }
+
+  .plate-qr-link {
+    height: 116px;
+    width: 116px;
+  }
+
+  .plate-qr {
+    height: 112px;
+    width: 112px;
+  }
+}
+
+@media (max-width: 420px) {
+  .plate-main {
+    grid-template-columns: 1.45fr .55fr .65fr 120px;
+  }
+
+  .plate-qr-link {
+    height: 116px;
+    width: 116px;
+  }
+
+  .plate-qr {
+    height: 112px;
+    width: 112px;
+  }
+}

@@ -1,0 +1,3 @@
+# Threat Model
+
+Protected assets are issuer trust, physical Plate UID, vehicle private keys, active bindings, entitlement, lifecycle history, challenges, and audit evidence. Tested threats include clone, genuine-plate transfer, protected-byte modification, vehicle impersonation, replay, expiry, revoked/reserved/lost/retired plate use, unauthorized plate-number transfer, duplicate active binding, concurrent rebinding, and mandatory dependency failure. Out of scope include CAN injection, towing, GPS jamming, relay resistance, compromised genuine vehicle keys, reader compromise, and physical secure-element attacks.

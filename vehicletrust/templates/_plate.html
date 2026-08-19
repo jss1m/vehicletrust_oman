@@ -1,0 +1,12 @@
+{% macro plate(credential, large=false) %}
+<div class="oman-plate {{ 'plate-large' if large else '' }}" data-testid="oman-plate">
+  <div class="plate-demo">PROTOTYPE / DEMO</div>
+  <div class="plate-main">
+    <div class="plate-number">{{ credential.plate_number }}</div>
+    <div class="plate-code"><b>{{ credential.plate_code }}</b><span>PRIVATE</span></div>
+    <div class="plate-oman" dir="rtl"><b>عُمان</b><span>OMAN</span></div>
+    <a class="plate-qr-link" href="{{ url_for('main.credential_code_detail', credential_id=credential.credential_id) }}" aria-label="Open compact signed credential detail"><img class="plate-qr" src="{{ url_for('static', filename='generated_qr/' + credential.qr_filename) }}" alt="Compact signed credential QR"></a>
+  </div>
+  <div class="plate-meta"><span>PLATE UID</span><span>{{ credential.plate_serial[-6:] }}</span><span>SECURE ID</span></div>
+</div>
+{% endmacro %}

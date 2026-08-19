@@ -1,0 +1,3 @@
+/* Local Bootstrap-compatible utility subset for the offline research prototype. */
+*,::before,::after{box-sizing:border-box}.container{width:100%;margin-right:auto;margin-left:auto;padding-right:20px;padding-left:20px}@media(min-width:1200px){.container{max-width:1320px}}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:.5rem;padding:.72rem 1rem;font-weight:700;text-decoration:none;cursor:pointer}.btn-primary{color:#fff;background:#0969a7}.btn-dark{color:#fff;background:#111827}.btn-outline{color:#182334;background:#fff;border-color:#c7d1db}.alert{padding:1rem;border-radius:.5rem;margin-bottom:1rem}.alert-danger{color:#8b1d28;background:#fce9eb;border:1px solid #f5bbc1}
+

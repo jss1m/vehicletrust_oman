@@ -1,0 +1,3 @@
+# Project Summary
+
+VehicleTrust Oman is a cybersecurity research prototype that separates plate number, immutable physical Plate UID, number entitlement, vehicle ownership, live vehicle identity, and active binding. A compact signed credential identifies the physical plate, while a fresh challenge proves the responding vehicle key. The registry distinguishes cryptographic validity from operational authorization across swap, clone, tamper, replay, revocation, loss, replacement, sale, rebinding, and reported-stolen states. All data and secure modules are simulated; there is no ROP or government-system connection.

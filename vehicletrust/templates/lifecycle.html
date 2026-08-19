@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% block title %}Plate &amp; Vehicle Lifecycle — VehicleTrust Oman{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">AUDITABLE IDENTITY LIFECYCLE</div><h1>Plate &amp; Vehicle Lifecycle</h1><p>The signed code identifies a physical plate; mutable ownership, entitlement, binding and status stay in the registry.</p></div></div>
+{% if result %}<div class="overall {{ 'overall-pass' if result.passed else 'overall-fail' }}">{{ 'PASS' if result.passed else 'FAIL' }} · Expected {{ result.expected|replace('_',' ') }} · Actual {{ result.actual|replace('_',' ') }}</div>{% if result.details %}<section class="panel"><h2>Transaction Evidence</h2><dl class="data-list">{% for key, value in result.details.items() %}<dt>{{ key|replace('_',' ')|title }}</dt><dd><code>{{ value|replace('_',' ') }}</code></dd>{% endfor %}</dl></section>{% endif %}{% endif %}
+<section class="panel"><h2>Owner Asset Portfolio</h2><div class="feature-grid">{% for item in portfolios %}<article class="feature-card"><span class="feature-no">{{ item.owner.owner_reference }}</span><h3>{{ item.owner.display_name }}</h3><p>Vehicles: {{ item.vehicles }} · Active plates: {{ item.plates }} · Reserved plate numbers: {{ item.reserved }}</p></article>{% endfor %}</div></section>
+<section class="panel"><h2>Controlled Demo Transactions</h2><div class="scenario-grid">{% for id, title, desc in [
+('keep_plate','Keep Plate / New Vehicle','Static Plate UID; dynamic authorized binding'),
+('sell_vehicle_with_plate','Sell Vehicle With Plate','Ownership changes; binding remains'),
+('sell_vehicle_keep_plate','Sell Vehicle / Keep Plate','Plate becomes reserved and unassigned'),
+('sell_plate_number','Transfer Plate Number','Old physical identity retires; new one issues'),
+('lost_plate','Report Lost Plate','Old code denied; replacement issued'),
+('multiple_vehicles','Multiple Vehicles','Independent owner assets and bindings'),
+('duplicate_binding','Duplicate Binding Attempt','Database invariant blocks it'),
+('stolen_vehicle','Report Vehicle Stolen','Identity confirmed with operational alert'),
+('plate_replacement','Replace Damaged Plate','Old Plate UID replaced; new code issued'),
+('concurrent_rebinding','Competing Rebinding','Exactly one transaction succeeds')
+] %}<form method="post" class="scenario-card"><input type="hidden" name="scenario" value="{{ id }}"><span>LC-{{ '%03d'|format(loop.index) }}</span><h3>{{ title }}</h3><p>{{ desc }}</p><button type="submit">Execute transaction →</button></form>{% endfor %}</div></section>
+{% endblock %}

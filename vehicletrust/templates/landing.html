@@ -1,0 +1,20 @@
+{% extends 'base.html' %}{% block title %}VehicleTrust Oman — Identity Assurance{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">CRYPTOGRAPHIC VEHICLE IDENTITY</div>
+    <h1>VehicleTrust <span>Oman</span></h1>
+    <h2>Cryptographic Identity Assurance for Physical Vehicles</h2>
+    <p>Separating physical plate identity, number entitlement, vehicle identity, ownership and the current auditable binding.</p>
+    <div class="actions"><a class="btn btn-primary" href="{{ url_for('main.verify') }}">Launch Verification</a><a class="btn btn-dark" href="{{ url_for('main.security_lab') }}">Open Security Lab</a><a class="btn btn-outline" href="{{ url_for('main.architecture') }}">View Architecture</a></div>
+  </div>
+  <div class="hero-visual"><img src="{{ url_for('static', filename='img/vehicle_identity.svg') }}" alt="Vehicle cryptographic identity shield"><div class="signal-chip">ES256 · FRESH NONCE · BINDING CHECK</div></div>
+</section>
+<section class="feature-grid">
+  <article class="feature-card"><span class="feature-no">01</span><h3>Plate Authenticity</h3><p>Digitally signed credentials detect protected-field tampering.</p></article>
+  <article class="feature-card"><span class="feature-no">02</span><h3>Vehicle Proof</h3><p>A simulated secure module signs a fresh one-time challenge.</p></article>
+  <article class="feature-card"><span class="feature-no">03</span><h3>Binding Assurance</h3><p>Registry binding proves the genuine plate is on its assigned vehicle.</p></article>
+</section>
+<div class="scope-note">Prototype designed to detect selected vehicle identity attacks including credential cloning, plate transfer, tampering and replay.</div>
+<section class="split-grid compact"><article class="panel"><h2>What VehicleTrust Protects Against</h2><p>Plate swapping, cloned credentials, genuine plates on the wrong vehicle, credential tampering, replay, revoked or lost physical plates, and reported-stolen vehicle status.</p></article><article class="panel"><h2>What It Does Not Directly Prevent</h2><p>Relay attacks against vehicle keys, CAN-injection theft, physical towing, GPS jamming, theft with genuine vehicle credentials, or physical compromise of vehicle hardware.</p></article></section>
+{% endblock %}

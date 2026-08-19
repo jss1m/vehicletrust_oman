@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: vehicletrust-oman-demo
+    runtime: python
+    rootDir: vehicletrust_oman
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 60 wsgi:app
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DEMO_MODE
+        value: "false"
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: DEMO_ADMIN_TOKEN
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:////var/data/vehicletrust.db
+    disk:
+      name: vehicletrust-demo-data
+      mountPath: /var/data
+      sizeGB: 1
